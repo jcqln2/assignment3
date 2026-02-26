@@ -1,58 +1,80 @@
+// src/App.jsx
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+function Card({ suit, value }) {
+  const isRed = suit === '♥' || suit === '♦'
+  return (
+    <div style={{
+      width: '100px',
+      height: '140px',
+      background: 'white',
+      borderRadius: '10px',
+      boxShadow: '0 3px 10px rgba(0,0,0,0.18)',
+      padding: '8px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      color: isRed ? '#dc2626' : '#1f2937',
+      fontWeight: 'bold',
+      userSelect: 'none'
+    }}>
+      <div>{value}{suit}</div>
+      <div style={{fontSize: '2.8rem', textAlign: 'center', opacity: 0.18}}>
+        {suit}
+      </div>
+      <div style={{textAlign: 'right'}}>{value}{suit}</div>
+    </div>
+  )
+}
 
 function App() {
   const createDeck = () => {
     const suits = ['♥','♦','♣','♠']
     const values = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
-    return suits.flatMap(suit => values.map(val => ({suit, value: val})))
+    return suits.flatMap(s => values.map(v => ({suit: s, value: v, id: `${v}-${s}-${Math.random()}`})))
   }
 
   const [deck, setDeck] = useState(createDeck())
-  const [drawn, setDrawn] = useState([])
+  const [hand, setHand] = useState([])
 
   const drawCard = () => {
-    if (deck.length === 0) return
+    if (!deck.length) return
     const idx = Math.floor(Math.random() * deck.length)
-    const [card] = deck.splice(idx, 1)
-    setDrawn([...drawn, card])
-    setDeck([...deck])
+    const card = deck[idx]
+    setDeck(deck.filter((_,i) => i !== idx))
+    setHand([...hand, card])
   }
 
   return (
     <div style={{ 
-      padding: '20px', minHeight: '100vh',
+      padding: '24px', minHeight: '100vh',
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       fontFamily: 'system-ui, sans-serif'
     }}>
-      <h1 style={{ textAlign: 'center', color: 'white', marginBottom: '32px' }}>
+      <h1 style={{ textAlign: 'center', color: 'white', marginBottom: '40px' }}>
         Card Deck Manipulator
       </h1>
 
       <div style={{maxWidth: '1200px', margin: '0 auto'}}>
-        {/* Deck */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        {/* Deck area */}
+        <div style={{textAlign: 'center', marginBottom: '48px'}}>
           <div style={{
-            width: '120px', height: '168px', margin: '0 auto',
-            background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
-            borderRadius: '12px', boxShadow: '0 6px 16px rgba(0,0,0,0.4)'
+            width: '130px', height: '170px', margin: '0 auto 12px',
+            background: 'linear-gradient(135deg, #1e40af, #60a5fa)',
+            borderRadius: '14px', boxShadow: '0 6px 20px rgba(0,0,0,0.35)'
           }} />
-          <div style={{color: 'white', marginTop: '12px'}}>
-            {deck.length} cards
-          </div>
+          <div style={{color: 'white'}}>{deck.length} cards left</div>
         </div>
 
         <button 
           onClick={drawCard}
-          disabled={deck.length === 0}
+          disabled={!deck.length}
           style={{
             display: 'block',
-            margin: '0 auto 40px',
-            padding: '14px 40px',
-            fontSize: '1.15rem',
-            background: deck.length ? '#10b981' : '#6b7280',
+            margin: '0 auto 48px',
+            padding: '14px 48px',
+            fontSize: '1.2rem',
+            background: deck.length ? '#10b981' : '#9ca3af',
             color: 'white',
             border: 'none',
             borderRadius: '10px',
@@ -62,41 +84,20 @@ function App() {
           Draw Card
         </button>
 
-        {/* Drawn cards */}
         <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '16px',
-          justifyContent: 'center',
-          minHeight: '180px',
-          padding: '20px',
-          background: 'rgba(255,255,255,0.85)',
-          borderRadius: '16px'
+          display: 'flex', flexWrap: 'wrap', gap: '12px',
+          justifyContent: 'center', padding: '24px',
+          background: 'rgba(255,255,255,0.88)',
+          borderRadius: '16px',
+          minHeight: '200px'
         }}>
-          {drawn.length === 0 ? (
-            <div style={{color: '#6b7280', padding: '40px 0'}}>
-              No cards drawn yet
+          {hand.length === 0 ? (
+            <div style={{color: '#6b7280', fontSize: '1.2rem', padding: '60px 0'}}>
+              Draw some cards...
             </div>
           ) : (
-            drawn.map((card, i) => (
-              <div key={i} style={{
-                width: '90px',
-                height: '130px',
-                background: 'white',
-                borderRadius: '10px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                padding: '8px',
-                color: ['♥','♦'].includes(card.suit) ? '#dc2626' : '#111827'
-              }}>
-                <div>{card.value}{card.suit}</div>
-                <div style={{fontSize: '2.4rem', textAlign: 'center', opacity: 0.15}}>
-                  {card.suit}
-                </div>
-                <div style={{textAlign: 'right'}}>{card.value}{card.suit}</div>
-              </div>
+            hand.map(card => (
+              <Card key={card.id} suit={card.suit} value={card.value} />
             ))
           )}
         </div>
