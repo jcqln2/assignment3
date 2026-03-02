@@ -1,0 +1,22 @@
+/* StAuth10244: I Jacqueline Robinson, 123456 certify that this material is my original work. No other person's work has been used without due acknowledgement. I have not made my work available to anyone else. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.card.picked {
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.deck.empty {
+  pointer-events: none;
+}

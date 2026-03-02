@@ -1,7 +1,7 @@
-// StAuth10244: I Jacqueline Robinson, 000967585 certify that this material is my original work. No
-//other person's work has been used without due acknowledgement. I have not made
-//my work available to anyone else. 
-import { useState } from 'react';
+/* StAuth10244: I Jacqueline Robinson, 000967585 certify that this material is my original work. No
+other person's work has been used without due acknowledgement. I have not made
+my work available to anyone else. */
+const { useState } = React;
 
 function Card({ suit, value, isPicked, onClick }) {
   const isRed = suit === '♥' || suit === '♦';
@@ -70,7 +70,6 @@ function Card({ suit, value, isPicked, onClick }) {
   );
 }
 
-// Deck Component
 function Deck({ hasCards, onDeckClick, remainingCount }) {
   return (
     <div 
@@ -160,20 +159,16 @@ function Deck({ hasCards, onDeckClick, remainingCount }) {
   );
 }
 
-// Main App Component
-export default function App() {
-  // Initialize a standard 52-card deck
+function App() {
   const createDeck = () => {
     const suits = ['♥', '♦', '♣', '♠'];
     const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
     const deck = [];
-    
-    for (let suit of suits) {
-      for (let value of values) {
-        deck.push({ suit, value, id: `${value}-${suit}-${Date.now()}-${Math.random()}` });
+    for (let s of suits) {
+      for (let v of values) {
+        deck.push({ suit: s, value: v, id: `${v}-${s}` });
       }
     }
-    
     return deck;
   };
 
@@ -181,37 +176,30 @@ export default function App() {
   const [selectedCards, setSelectedCards] = useState([]);
   const [pickedCardId, setPickedCardId] = useState(null);
 
-  // Draw a random card from the deck
   const drawCard = () => {
     if (availableDeck.length === 0) return;
-    
     const randomIndex = Math.floor(Math.random() * availableDeck.length);
     const drawnCard = availableDeck[randomIndex];
-    
     setAvailableDeck(availableDeck.filter((_, index) => index !== randomIndex));
     setSelectedCards([...selectedCards, drawnCard]);
   };
 
-  // Deal a specific number of cards
   const dealCards = (count) => {
     const newDeck = [...availableDeck, ...selectedCards];
     const shuffled = [...newDeck].sort(() => Math.random() - 0.5);
     const dealt = shuffled.slice(0, count);
     const remaining = shuffled.slice(count);
-    
     setAvailableDeck(remaining);
     setSelectedCards(dealt);
     setPickedCardId(null);
   };
 
-  // Reset all cards back to deck
   const resetCards = () => {
     setAvailableDeck(createDeck());
     setSelectedCards([]);
     setPickedCardId(null);
   };
 
-  // Handle card click - either pick or swap
   const handleCardClick = (cardId) => {
     if (pickedCardId === cardId) {
       setPickedCardId(null);
@@ -220,44 +208,35 @@ export default function App() {
     } else {
       const pickedIndex = selectedCards.findIndex(card => card.id === pickedCardId);
       const clickedIndex = selectedCards.findIndex(card => card.id === cardId);
-      
       const newCards = [...selectedCards];
       [newCards[pickedIndex], newCards[clickedIndex]] = [newCards[clickedIndex], newCards[pickedIndex]];
-      
       setSelectedCards(newCards);
       setPickedCardId(null);
     }
   };
 
-  // Toss the picked card
   const tossCard = () => {
     if (pickedCardId === null) return;
-    
     setSelectedCards(selectedCards.filter(card => card.id !== pickedCardId));
     setPickedCardId(null);
   };
 
-  // Regroup (shuffle) selected cards
   const regroupCards = () => {
     const shuffled = [...selectedCards].sort(() => Math.random() - 0.5);
     setSelectedCards(shuffled);
     setPickedCardId(null);
   };
 
-  // Create a wildcard
   const createWildcard = () => {
     const suits = ['♥', '♦', '♣', '♠'];
     const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-    
     const randomSuit = suits[Math.floor(Math.random() * suits.length)];
     const randomValue = values[Math.floor(Math.random() * values.length)];
-    
     const wildcard = {
       suit: randomSuit,
       value: randomValue,
       id: `wildcard-${Date.now()}-${Math.random()}`
     };
-    
     setSelectedCards([...selectedCards, wildcard]);
   };
 
@@ -318,28 +297,19 @@ export default function App() {
         }}>
           <button 
             onClick={() => dealCards(5)} 
-            style={{
-              ...buttonStyle,
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-            }}
+            style={{ ...buttonStyle, background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}
           >
             Deal 5
           </button>
           <button 
             onClick={() => dealCards(7)} 
-            style={{
-              ...buttonStyle,
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-            }}
+            style={{ ...buttonStyle, background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}
           >
             Deal 7
           </button>
           <button 
             onClick={resetCards} 
-            style={{
-              ...buttonStyle,
-              background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
-            }}
+            style={{ ...buttonStyle, background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' }}
           >
             Reset
           </button>
@@ -357,19 +327,13 @@ export default function App() {
           </button>
           <button 
             onClick={createWildcard} 
-            style={{
-              ...buttonStyle,
-              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-            }}
+            style={{ ...buttonStyle, background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' }}
           >
             Wildcard
           </button>
           <button 
             onClick={regroupCards} 
-            style={{
-              ...buttonStyle,
-              background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
-            }}
+            style={{ ...buttonStyle, background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' }}
           >
             Regroup
           </button>
@@ -414,3 +378,6 @@ export default function App() {
     </div>
   );
 }
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
